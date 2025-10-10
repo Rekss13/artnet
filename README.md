@@ -68,7 +68,7 @@ This lib throttles the maximum send rate to ~40Hz. Unchanged data is refreshed e
 ## Methods
 
 #### **set(** { [ [ universe: *uint15* **universe** , ] channel: *uint9* **channel** , ] value: *uint8* **value** [ , *function(err, res)* **callback** ] } **)**
-#### **set(** [ [ universe: *uint15* **universe** , ] channel: *uint9* **channel** , ] value: *array[uint8]* **values** [ , pixelSize: *uint8* **pixelSize** , duplicateUniverse: *uint15* **duplicateUniverse** , *function(err, res)* **callback** ] **)**
+#### **set(** { [ [ universe: *uint15* **universe** , ] channel: *uint9* **channel** , ] value: *array[uint8]* **values** [ , pixelSize: *uint8* **pixelSize** , duplicateUniverse: *uint15* **duplicateUniverse** , *function(err, res)* **callback** ] } **)**
 
 
 Every parameter except the value(s) is optional. If you supply a universe you need to supply the channel also.
