@@ -19,7 +19,7 @@ var options = {
 var artnet = require('artnet')(options);
 
 // set channel 1 to 255 and disconnect afterwards.
-artnet.set(1, 255, function (err, res) {
+artnet.set({ channel: 1, value: 255 }, (err, res) => {
     artnet.close();
 });
 ```
@@ -29,19 +29,19 @@ The set method can set multiple channels at once:
 Use an array to set subsequent channels...
 ```javascript
 // set channel 100 to 10, channel 101 to 20 and channel 102 to 30
-artnet.set(100, [10, 20, 30]);
+artnet.set({ channel: 100, value: [10, 20, 30] });
 ```
 
 ...if you want to keep certain channels unchanged set them to null
 ```javascript
 // set channel 50 to 255 and channel 52 to 127
-artnet.set(50, [255, null, 127]);
+artnet.set({ channel: 50, value: [255, null, 127] });
 ```
 
 you can omit the channel, it defaults to 1
 ```javascript
 // Set channel 1 to 255 and channel 2 to 127:
-artnet.set([255, 127]);
+artnet.set({ value: [255, 127] });
 ```
 
 Additionally, you can send trigger macros to devices.
@@ -67,12 +67,17 @@ This lib throttles the maximum send rate to ~40Hz. Unchanged data is refreshed e
 
 ## Methods
 
-#### **set(** [ [ *uint15* **universe** , ] *uint9* **channel** , ] *uint8* **value** [ , *function(err, res)* **callback** ] **)**
-#### **set(** [ [ *uint15* **universe** , ] *uint9* **channel** , ] *array[uint8]* **values** [ , *function(err, res)* **callback** ] **)**
+#### **set(** { [ [ universe: *uint15* **universe** , ] channel: *uint9* **channel** , ] value: *uint8* **value** [ , *function(err, res)* **callback** ] } **)**
+#### **set(** [ [ universe: *uint15* **universe** , ] channel: *uint9* **channel** , ] value: *array[uint8]* **values** [ , pixelSize: *uint8* **pixelSize** , duplicateUniverse: *uint15* **duplicateUniverse** , *function(err, res)* **callback** ] **)**
 
 
 Every parameter except the value(s) is optional. If you supply a universe you need to supply the channel also.
-Defaults: universe = 0, channel = 1
+Defaults: universe = 0, channel = 1, pixelSize: 1
+
+pixelSize and duplicateUniverse are processed only if an array is passed as the value.  
+pixelSize is required to correctly transfer data to a neighboring universe if the array size is greater than 512 elements.
+
+duplicateUniverse is used for situations where data transfer needs to be duplicated to another universe, such as for Yarilo PixelDIN dual-port IP interfaces.
 
 Callback is called with (error, response) params.
 If error and response are null data remained unchanged and therefore nothing has been sent.
